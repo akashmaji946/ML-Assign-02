@@ -60,13 +60,19 @@ def train(
         model: nn.Module,
         data_loader: DataLoader,
         optimizer: optim.Optimizer,
-        epochs: int = 10,
+        epochs: int = 100,
 ) -> None:
     print("Training...")
     model.to(get_device())
+    if epochs == -1:
+        print("Training till convergence...")
+        epochs = 1000
     for epoch in range(epochs):
         train_loss, train_acc = train_epoch(model, data_loader, optimizer)
         print(f"Epoch {epoch + 1} / {epochs} | " +
               f"Train Loss: {train_loss:.4f} | " +
               f"Train Acc: {train_acc:.4f}")
+        if train_acc > 0.95 and train_loss < 0.005 and epochs == 100:
+            print("Early stopping: accuracy reached 95%")
+            break
     print("Training complete!")

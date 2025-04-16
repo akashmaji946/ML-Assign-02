@@ -1,14 +1,15 @@
 import subprocess
 
 # Define the hyperparameter values
-learning_rates = [0.1, 0.01, 0.001, 0.0001]
-batch_sizes = [32, 64, 128, 256, 512, 1024]
+learning_rates = [0.01, 0.001, 0.0001]
 epochs_list = [25, 50, 75, 100]
+batch_sizes = [32, 64, 128, 256, 512, 1024]
+
 
 # Iterate over all combinations of hyperparameters
 for lr in learning_rates:
-    for b in batch_sizes:
-        for e in epochs_list:
+    for e in epochs_list:
+        for b in batch_sizes:
             print(f"Running with lr={lr}, batch_size={b}, epochs={e}")
             # Define the output file name
             output_file = f"./output-logs/output_lr{lr}_b{b}_e{e}.txt"
