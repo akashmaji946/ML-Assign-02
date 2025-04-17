@@ -47,26 +47,25 @@ def name_surface_file(args, dir_file):
 
 
 def setup_surface_file(args, surf_file, dir_file):
-    # skip if the direction file already exists
+    # Skip if the direction file already exists
     if os.path.exists(surf_file):
-        f = h5py.File(surf_file, 'r')
-        if (args.y and 'ycoordinates' in f.keys()) or 'xcoordinates' in f.keys():
-            f.close()
-            print ("%s is already set up" % surf_file)
-            return
+        with h5py.File(surf_file, 'r') as f:
+            if (args.y and 'ycoordinates' in f.keys()) or 'xcoordinates' in f.keys():
+                print(f"{surf_file} is already set up")
+                return
 
-    f = h5py.File(surf_file, 'a')
-    f['dir_file'] = dir_file
+    with h5py.File(surf_file, 'a') as f:
+        f['dir_file'] = dir_file
 
-    # Create the coordinates(resolutions) at which the function is evaluated
-    xcoordinates = np.linspace(args.xmin, args.xmax, num=args.xnum)
-    f['xcoordinates'] = xcoordinates
+        # Create the coordinates (resolutions) at which the function is evaluated
+        args.xnum = int(args.xnum)
+        args.ynum = int(args.ynum) if args.y else 1
+        xcoordinates = np.linspace(args.xmin, args.xmax, num=args.xnum)
+        f['xcoordinates'] = xcoordinates
 
-    if args.y:
-        ycoordinates = np.linspace(args.ymin, args.ymax, num=args.ynum)
-        f['ycoordinates'] = ycoordinates
-    f.close()
-
+        if args.y:
+            ycoordinates = np.linspace(args.ymin, args.ymax, num=args.ynum)
+            f['ycoordinates'] = ycoordinates
     return surf_file
 
 

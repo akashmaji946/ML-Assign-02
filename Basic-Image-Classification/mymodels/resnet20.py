@@ -188,3 +188,5 @@ def main() -> None:
 
     print(f" >>> TEST LOSS: {test_loss:.4f} | TEST ACC: {test_acc:.4f} <<< ")
 
+if __name__ == "__main__":
+    main()

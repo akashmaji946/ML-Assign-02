@@ -3,6 +3,7 @@ import torch, torchvision
 import cifar10.models.vgg as vgg
 import cifar10.models.resnet as resnet
 import cifar10.models.densenet as densenet
+import mymodels.resnet20 as rn20
 
 # map between model name and function
 models = {
@@ -35,10 +36,14 @@ models = {
     'wrn56_8_noshort'       : resnet.WRN56_8_noshort,
     'wrn110_2_noshort'      : resnet.WRN110_2_noshort,
     'wrn110_4_noshort'      : resnet.WRN110_4_noshort,
+
+    # my models
+    'rn20': rn20,
 }
 
 def load(model_name, model_file=None, data_parallel=False):
-    net = models[model_name]()
+
+    net = models[model_name]
     if data_parallel: # the model is saved in data paralle mode
         net = torch.nn.DataParallel(net)
 
