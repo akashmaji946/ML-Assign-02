@@ -37,6 +37,15 @@ class Net(nn.Module):
         x = torch.log_softmax(self.fc2(x), dim=1)
         return x
 
+from torchvision import transforms
+
+transform_train = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),  # Randomly crop the image
+    transforms.RandomHorizontalFlip(),    # Randomly flip the image horizontally
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))  # Normalize with CIFAR-10 mean and std
+])
+
 
 def main() -> None:
     # Parse command-line arguments
@@ -47,21 +56,23 @@ def main() -> None:
     args = parser.parse_args()
 
     # Load the data
-    train_loader, test_loader = get_data('cifar10', batch_size=args.b)
+    train_loader, test_loader = get_data('cifar10', batch_size=args.b, transform=transform_train)
 
     # Create a model
     model = Net()
     print("Model Parameter Count:", sum(p.numel() for p in model.parameters()))
 
     # Create an optimizer
-    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
 
     # Train the model
     train(model, train_loader, optimizer, epochs=args.e)
 
+    torch.save(model.state_dict(), "./weights-new/net.pth")
+
     # Evaluate the model
     test_loss, test_acc = evaluate(model, test_loader)
-    print(f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
+    print(f"*** Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
 
 
 if __name__ == "__main__":

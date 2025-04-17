@@ -163,22 +163,39 @@ def main() -> None:
     train_loader, test_loader = get_data('cifar10', batch_size=32, transform=transform_func)
 
     # Create a model
-    model = ResNet(7)
+    model = PlainNet(18)
     print("Model Parameters Count :", sum(p.numel() for p in model.parameters()))
 
     # Create an optimizer
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Train the model
-    train(model, train_loader, optimizer, epochs=50)
+    train(model, train_loader, optimizer, epochs=100)
 
     # will save the model
-    torch.save(model.state_dict(), "./weights/v9-cifar10-plain-110.pth")
+    torch.save(model.state_dict(), "./weights-new/v9-cifar10-plain-110.pth")
 
     # Evaluate the model
     test_loss, test_acc = evaluate(model, test_loader)
 
     print(f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
 
+def eval():
+    # Load the model
+    model = PlainNet(18)
+    model.load_state_dict(torch.load("./weights-new/v9-cifar10-plain-110.pth"))
+    model.cuda()
+    model.eval()
+
+
+    # Load the test data
+    _, test_loader = get_data('cifar10', batch_size=32, transform=transform_func)
+
+    # Evaluate the model
+    test_loss, test_acc = evaluate(model, test_loader)
+
+    print(f">>>> Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
+
 if __name__ == "__main__":
     main()
+    eval()
