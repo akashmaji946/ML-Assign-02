@@ -38,12 +38,15 @@ class Net(nn.Module):
         return x
 
 from torchvision import transforms
-
 transform_train = transforms.Compose([
-    transforms.RandomCrop(32, padding=4),  # Randomly crop the image
-    transforms.RandomHorizontalFlip(),    # Randomly flip the image horizontally
+    # crop the image
+    transforms.RandomCrop(32, padding=4), 
+    # flip the image horizontally
+    transforms.RandomHorizontalFlip(),   
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))  # Normalize with CIFAR-10 mean and std
+    # noramlize the image
+    transforms.Normalize((0.4914, 0.4822, 0.4465), 
+                         (0.2023, 0.1994, 0.2010))
 ])
 
 

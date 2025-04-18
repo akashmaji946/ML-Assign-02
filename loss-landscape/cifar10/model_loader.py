@@ -44,6 +44,7 @@ models = {
     'pn56': plainnet56,
     'rn110': resnet110,
     'pn110': plainnet110,
+    'net': net,
 
 }
 
